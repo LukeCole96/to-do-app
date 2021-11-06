@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Bootstrap Example</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <script src="./js/jsonSample.js"></script>
+
+    </head>
+    <body>
+        <div class ="container">
+            <h1>To do</h1>
+            <div class="row mt-4">
+                <div class="col-8">
+                    <ul id="to-do-list">
+                        
+                    </ul>
+                </div>
+                <div class="col-4">
+                    <form>
+                        <input type="text" class="form-control" id="todoTitle" placeholder="Todo title...">
+                        <button onclick="newTodo()" class="addBtn btn btn-sm btn-primary form-control mt-3"> Add</span>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </body>
+    <script>
+        
+    var json_data = [];
+
+    var myList = document.getElementById("to-do-list");
+
+    json_data.forEach(element => {
+       newTodo(element.title)
+    });
+    registerEventListeners();
+
+   function registerEventListeners() {
+    var closeButtons = document.getElementsByClassName("delete");
+    for(var i=0; i < closeButtons.length; i++) {
+        closeButtons[i].addEventListener('click', deleteTodo, false);
+    }
+   }
+
+    function deleteTodo() {
+        var li = this.parentElement;
+        myList.removeChild(li);
+    }
+
+    function newTodo(todoTitle) {
+        if(!todoTitle) {
+            todoTitle = document.getElementById("todoTitle").value;
+        }
+        var listItem = document.createElement("li");
+        listItem.appendChild(
+            document.createTextNode(todoTitle)
+        );
+        var deleteLink = document.createElement("a");
+
+        deleteLink.href = "#";
+        deleteLink.className = "btn btn-sm btn-danger m-1 delete";
+        deleteLink.appendChild(
+            document.createTextNode("Delete")
+        );
+        listItem.appendChild(deleteLink);
+        myList.appendChild(listItem);
+        registerEventListeners();
+    }
+    </script>
+</html>
