@@ -29,13 +29,24 @@
     </body>
     <script>
         
-    var json_data = [];
+    // var json_data = [
+    //     {
+    //         "title": "sample",
+    //         "completed": false
+    //     }
+    // ];
 
+    var json_data = JSON.parse(localStorage.getItem('json_data'));
     var myList = document.getElementById("to-do-list");
 
-    json_data.forEach(element => {
-       newTodo(element.title)
-    });
+    if(json_data) {
+        json_data.forEach(element => {
+            if (element) {
+                newTodo(element.title, element.id);
+            }
+        });
+    }
+
     registerEventListeners();
 
    function registerEventListeners() {
@@ -48,16 +59,28 @@
     function deleteTodo() {
         var li = this.parentElement;
         myList.removeChild(li);
+
+        var json_temp = JSON.parse(localStorage.getItem('json_data'));
+        delete json_temp[li.dataset.id];
+
+        localStorage.setItem('json_data', JSON.stringify(json_temp));
     }
 
-    function newTodo(todoTitle) {
-        if(!todoTitle) {
+    function newTodo(todoTitle, todoId) {
+        if(!todoTitle && !todoId) {
             todoTitle = document.getElementById("todoTitle").value;
+            var todoId = storeTodoLocal(todoTitle);
+            
         }
+
         var listItem = document.createElement("li");
+
+        listItem.dataset.id = todoId;
+        listItem.dataset.id = todoId;
         listItem.appendChild(
             document.createTextNode(todoTitle)
         );
+
         var deleteLink = document.createElement("a");
 
         deleteLink.href = "#";
@@ -68,6 +91,26 @@
         listItem.appendChild(deleteLink);
         myList.appendChild(listItem);
         registerEventListeners();
+    }
+
+    function storeTodoLocal(todoTitle) {
+        var json_temp = JSON.parse(localStorage.getItem('json_data'));
+        if(!json_temp) {
+            json_temp = [];
+        }
+
+        var todoId = json_temp.length;
+
+        json_temp.push({
+            "id": todoId,
+            "title": todoTitle,
+            "completed": false
+        });
+
+
+        localStorage.setItem('json_data', JSON.stringify(json_temp));
+
+        return todoId
     }
     </script>
 </html>
